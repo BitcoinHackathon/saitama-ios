@@ -1,1 +1,6 @@
-# Hands-on-iOS
+# Saitama for iOS
+
+## Installation
+```
+$ carthage update
+```
