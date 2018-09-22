@@ -1,0 +1,18 @@
+{
+  "Mac" : [
+
+  ],
+  "watchOS" : [
+
+  ],
+  "tvOS" : [
+
+  ],
+  "commitish" : "v1.1.0-beta2",
+  "iOS" : [
+    {
+      "name" : "BitcoinKit",
+      "hash" : "ec3285b6baf9a4e7498ac83e210ee44698129f6200a82e0cd225abc06f006ca8"
+    }
+  ]
+}
