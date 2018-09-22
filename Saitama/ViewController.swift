@@ -130,9 +130,9 @@ func testMockScript() {
 //        let result4 = try MockHelper.verifySingleKey(lockScript: P2SHMultisig.lockScript, unlockScriptBuilder: P2SHMultisig.UnlockScriptBuilder(), key: MockKey.keyA)
 //        print("Mock result4: \(result4)")
 //
-        // 9. OP_IFを使ったScript
-        let result5 = try MockHelper.verifySingleKey(lockScript: OPIF.lockScript, unlockScriptBuilder: OPIF.UnlockScriptBuilder(), key: MockKey.keyB, verbose: true)
-        print("Mock result5: \(result5)")
+//        // 9. OP_IFを使ったScript
+//        let result5 = try MockHelper.verifySingleKey(lockScript: OPIF.lockScript, unlockScriptBuilder: OPIF.UnlockScriptBuilder(), key: MockKey.keyB, verbose: true)
+//        print("Mock result5: \(result5)")
     } catch let error {
         print("Mock Script Error: \(error)")
     }
