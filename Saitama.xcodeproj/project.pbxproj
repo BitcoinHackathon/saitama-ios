@@ -21,7 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0CD8D33021537A40005E941E /* BitcoinKit-HandsOn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BitcoinKit-HandsOn.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0CD8D33021537A40005E941E /* Saitama.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Saitama.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CD8D33321537A40005E941E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0CD8D33521537A40005E941E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		0CD8D33821537A40005E941E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -51,7 +51,7 @@
 		0CD8D32721537A40005E941E = {
 			isa = PBXGroup;
 			children = (
-				0CD8D33221537A40005E941E /* BitcoinKit-HandsOn */,
+				0CD8D33221537A40005E941E /* Saitama */,
 				0CD8D33121537A40005E941E /* Products */,
 				0CD8D34521537C95005E941E /* Frameworks */,
 			);
@@ -60,12 +60,12 @@
 		0CD8D33121537A40005E941E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0CD8D33021537A40005E941E /* BitcoinKit-HandsOn.app */,
+				0CD8D33021537A40005E941E /* Saitama.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		0CD8D33221537A40005E941E /* BitcoinKit-HandsOn */ = {
+		0CD8D33221537A40005E941E /* Saitama */ = {
 			isa = PBXGroup;
 			children = (
 				0CD8D33321537A40005E941E /* AppDelegate.swift */,
@@ -79,7 +79,7 @@
 				0CD8D33C21537A41005E941E /* LaunchScreen.storyboard */,
 				0CD8D33F21537A41005E941E /* Info.plist */,
 			);
-			path = "BitcoinKit-HandsOn";
+			path = Saitama;
 			sourceTree = "<group>";
 		};
 		0CD8D34521537C95005E941E /* Frameworks */ = {
@@ -102,9 +102,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0CD8D32F21537A40005E941E /* BitcoinKit-HandsOn */ = {
+		0CD8D32F21537A40005E941E /* Saitama */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0CD8D34221537A41005E941E /* Build configuration list for PBXNativeTarget "BitcoinKit-HandsOn" */;
+			buildConfigurationList = 0CD8D34221537A41005E941E /* Build configuration list for PBXNativeTarget "Saitama" */;
 			buildPhases = (
 				0CD8D34821537C9C005E941E /* Carthage */,
 				0CD8D32C21537A40005E941E /* Sources */,
@@ -115,9 +115,9 @@
 			);
 			dependencies = (
 			);
-			name = "BitcoinKit-HandsOn";
+			name = Saitama;
 			productName = "BitcoinKit-HandsOn";
-			productReference = 0CD8D33021537A40005E941E /* BitcoinKit-HandsOn.app */;
+			productReference = 0CD8D33021537A40005E941E /* Saitama.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -135,7 +135,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0CD8D32B21537A40005E941E /* Build configuration list for PBXProject "BitcoinKit-HandsOn" */;
+			buildConfigurationList = 0CD8D32B21537A40005E941E /* Build configuration list for PBXProject "Saitama" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -148,7 +148,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0CD8D32F21537A40005E941E /* BitcoinKit-HandsOn */,
+				0CD8D32F21537A40005E941E /* Saitama */,
 			);
 		};
 /* End PBXProject section */
@@ -344,12 +344,12 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = "BitcoinKit-HandsOn/Info.plist";
+				INFOPLIST_FILE = Saitama/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Yenom.BitcoinKit-HandsOn";
+				PRODUCT_BUNDLE_IDENTIFIER = net.akifumifukaya.saitama;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -365,12 +365,12 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = "BitcoinKit-HandsOn/Info.plist";
+				INFOPLIST_FILE = Saitama/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Yenom.BitcoinKit-HandsOn";
+				PRODUCT_BUNDLE_IDENTIFIER = net.akifumifukaya.saitama;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -380,7 +380,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0CD8D32B21537A40005E941E /* Build configuration list for PBXProject "BitcoinKit-HandsOn" */ = {
+		0CD8D32B21537A40005E941E /* Build configuration list for PBXProject "Saitama" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0CD8D34021537A41005E941E /* Debug */,
@@ -389,7 +389,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0CD8D34221537A41005E941E /* Build configuration list for PBXNativeTarget "BitcoinKit-HandsOn" */ = {
+		0CD8D34221537A41005E941E /* Build configuration list for PBXNativeTarget "Saitama" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0CD8D34321537A41005E941E /* Debug */,

@@ -1,6 +1,6 @@
 //
-//  MockScripts.swift
-//  BitcoinKit-HandsOn
+//  AnswerMockScripts.swift
+//  Saitama
 //
 //  Created by Akifumi Fujita on 2018/09/20.
 //  Copyright © 2018年 Yenom. All rights reserved.
@@ -9,8 +9,7 @@
 import Foundation
 import BitcoinKit
 
-// TODO: - 5. 単純な計算のScript
-struct simpleCalculation {
+struct AnswerSimpleCalculation {
     // lock script
     static let lockScript = try! Script()
         .append(.OP_2)
@@ -28,8 +27,7 @@ struct simpleCalculation {
     }
 }
 
-// TODO: - 6. P2PKHのScript
-struct P2PKH {
+struct AnswerP2PKH {
     // lock script
     static let lockScript = try! Script()
         .append(.OP_DUP)
@@ -52,8 +50,7 @@ struct P2PKH {
     }
 }
 
-// TODO: - 7. 2 of 3 の MultisigのScript
-struct Multisig2of3 {
+struct AnswerMultisig2of3 {
     // lock script
     static let lockScript = try! Script()
         .append(.OP_2)
@@ -63,19 +60,20 @@ struct Multisig2of3 {
         .append(.OP_3)
         .append(.OP_CHECKMULTISIG)
     
+    static let lockScript2 = Script(publicKeys: [MockKey.keyA.pubkey, MockKey.keyB.pubkey, MockKey.keyC.pubkey], signaturesRequired: 1)!
+    
     // unlock script builder
     struct UnlockScriptBuilder: MockUnlockScriptBuilder {
         func build(pairs: [SigKeyPair]) -> Script {
-            let script = try! Script().append(.OP_0)
+            let script = try! Script()
+                .append(.OP_0)
             pairs.forEach { try! script.appendData($0.signature) }
             return script
-            
         }
     }
 }
 
-// TODO: - 8. P2SH形式のMultisig
-struct P2SHMultisig {
+struct AnswerP2SHMultisig {
     // lock script
     static let redeemScript = Script(publicKeys: [MockKey.keyA.pubkey, MockKey.keyB.pubkey, MockKey.keyC.pubkey], signaturesRequired: 1)!
     
@@ -100,8 +98,7 @@ struct P2SHMultisig {
     }
 }
 
-// TODO: 9. OP_IFを使ったScript
-struct OPIF {
+struct AnswerOPIF {
     // lock script
     static let lockScript = try! Script()
         .append(.OP_IF)
@@ -122,7 +119,6 @@ struct OPIF {
             guard let sigKeyPair = pairs.first else {
                 return Script()
             }
-            
             let script = try! Script()
                 .appendData(sigKeyPair.signature)
                 .appendData(sigKeyPair.key.data)
