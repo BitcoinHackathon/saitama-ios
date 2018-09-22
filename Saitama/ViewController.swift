@@ -15,7 +15,21 @@ class ViewController: UIViewController {
     @IBOutlet weak var balanceLabel: UILabel!
     @IBOutlet private weak var destinationAddressTextField: UITextField!
     
-    private var wallet: Wallet?  = Wallet()
+    private lazy var dataStore: BitcoinKitDataStoreProtocol = {
+        if Config.isMainNet {
+            return UserDefaults.bitcoinKit
+        } else {
+            return UserDefaults(suiteName: "Test")!
+        }
+    }()
+    
+    private lazy var wallet: Wallet? = {
+        if Config.isMainNet {
+            return Wallet(dataStore: dataStore)
+        } else {
+            return Wallet()
+        }
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,10 +43,15 @@ class ViewController: UIViewController {
         if wallet == nil {
             // TODO: - 1. Walletの作成
             // TODO: 1-1. Private Keyの生成
-            let privateKey = PrivateKey(network: .testnet)
+            let privateKey: PrivateKey
+            if Config.isMainNet {
+                privateKey = PrivateKey(network: .mainnet)
+            } else {
+                privateKey = PrivateKey(network: .testnet)
+            }
             
             // TODO: 1-2. Walletの生成
-            wallet = Wallet(privateKey: privateKey)
+            wallet = Wallet(privateKey: privateKey, dataStore: dataStore)
             
             // TODO: 1-3. Walletの保存
             // wallet?."WRITE ME"
@@ -107,7 +126,11 @@ class ViewController: UIViewController {
         let signedTx = try SendUtility.customTransactionSign(unsignedTx, with: [wallet.privateKey])
         
         let rawtx = signedTx.serialized().hex
-        BitcoinComTransactionBroadcaster(network: .testnet).post(rawtx, completion: completion)
+        if Config.isMainNet {
+            BitcoinComTransactionBroadcaster(network: .mainnet).post(rawtx, completion: completion)
+        } else {
+            BitcoinComTransactionBroadcaster(network: .testnet).post(rawtx, completion: completion)
+        }
     }
 }
 
