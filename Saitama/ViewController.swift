@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  BitcoinKit-HandsOn
+//  Saitama
 //
 //  Created by Akifumi Fujita on 2018/09/20.
 //  Copyright © 2018年 Yenom. All rights reserved.
