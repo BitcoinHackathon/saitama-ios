@@ -11,24 +11,45 @@ import BitcoinKit
 
 class SendUtility {
     
-    static func customTransactionBuild(to: (address: Address, amount: UInt64), change: (address: Address, amount: UInt64), utxos: [UnspentTransaction]) throws -> UnsignedTransaction {
-        let lockScriptTo = try! Script()
-            .append(.OP_DUP)
-            .append(.OP_HASH160)
-            .appendData(to.address.data)
-            .append(.OP_EQUALVERIFY)
-            .append(.OP_CHECKSIG)
+    static func customTransactionBuild(to: (address: Address, amount: UInt64), change: (address: Address, amount: UInt64), keys: (pubKeyA: Data, pubKeyB: Data), utxos: [UnspentTransaction]) throws -> UnsignedTransaction {
+        
+        let now = Date().timeIntervalSince1970
+        let locktime: Double = 60 * 1
+        let expiry = UInt32(now + locktime)
+        
+        // ｀LockTime+P2PHK(A)｀ or ｀MultiSig(A,B)｀
+        let redeemScript = try! Script()
+            .append(.OP_IF)
+                .appendData(Data(from: expiry))
+                .append(.OP_CHECKLOCKTIMEVERIFY)
+                .append(.OP_DROP)
+                .append(.OP_DUP)
+                .append(.OP_HASH160)
+                .appendData(to.address.data)
+                .append(.OP_EQUALVERIFY)
+                .append(.OP_CHECKSIG)
+            .append(.OP_ELSE)
+                .append(.OP_2)
+                .appendData(keys.pubKeyA)
+                .appendData(keys.pubKeyB)
+                .append(.OP_2)
+                .append(.OP_CHECKMULTISIG)
+            .append(.OP_ENDIF)
         
         let lockScriptChange = Script(address: change.address)!
         
-        // 9. OP_RETURNのOutputを作成する
+        let opReturnScript = try! Script()
+            .append(.OP_RETURN)
+            .appendData(redeemScript.data)
         
-        // 10. OP_CLTVのOutputを作成する
+        let p2shAddress = redeemScript.standardAddress(network: Config.isMainNet ? .mainnet : .testnet)
+        print(p2shAddress)
         
-        let toOutput = TransactionOutput(value: to.amount, lockingScript: lockScriptTo.data)
+        let opCLTVOutput = TransactionOutput(value: to.amount, lockingScript: redeemScript.toP2SH().data)
         let changeOutput = TransactionOutput(value: change.amount, lockingScript: lockScriptChange.data)
+        let opReturnOutput = TransactionOutput(value: 0, lockingScript: opReturnScript.data)
         
-        let outputs = [toOutput, changeOutput]
+        let outputs = [opCLTVOutput, changeOutput, opReturnOutput]
         
         let unsignedInputs = utxos.map { TransactionInput(previousOutput: $0.outpoint, signatureScript: Data(), sequence: UInt32.max) }
         let tx = Transaction(version: 1, inputs: unsignedInputs, outputs: outputs, lockTime: 0)

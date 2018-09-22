@@ -61,6 +61,7 @@ class AnswerViewController: UIViewController {
     }
     
     func customSend(to toAddress: Address, amount: UInt64, completion: ((String?) -> Void)?) throws {
+        /*
         guard let wallet = wallet else {
             return
         }
@@ -75,6 +76,7 @@ class AnswerViewController: UIViewController {
         
         let rawtx = signedTx.serialized().hex
         BitcoinComTransactionBroadcaster(network: .testnet).post(rawtx, completion: completion)
+ */
     }
     
     @IBAction func didTapReloadBalanceButton(_ sender: UIButton) {

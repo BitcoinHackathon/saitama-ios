@@ -91,6 +91,13 @@ class ViewController: UIViewController {
     }
     
     @IBAction func didTapSendButton(_ sender: UIButton) {
+        // TODO: NFCから読み取り
+        let seatPublicKeyData: Data = MockKey.keyB.pubkey.data
+        let amount: Int64 = 1000
+        sendToSeat(seatPublicKeyData: seatPublicKeyData, amount: amount)
+    }
+    
+    private func send() {
 //        let addressString = "bchtest:qpytf7xczxf2mxa3gd6s30rthpts0tmtgyw8ud2sy3"
         guard let addressString = destinationAddressTextField.text else {
             return
@@ -112,17 +119,30 @@ class ViewController: UIViewController {
         }
     }
     
-    func customSend(to toAddress: Address, amount: UInt64, completion: ((String?) -> Void)?) throws {
+    private func sendToSeat(seatPublicKeyData: Data, amount: Int64) {
+        let amount: UInt64 = 1000
+        do {
+            try customSend(to: seatPublicKeyData, amount: amount) { [weak self] (response) in
+                print("送金完了　txid : ", response ?? "")
+                self?.reloadBalance()
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    func customSend(to seatPublicKeyData: Data, amount: UInt64, completion: ((String?) -> Void)?) throws {
         guard let wallet = wallet else {
             return
         }
+        // TODO: Output address も集める必要がある
         let utxos = wallet.utxos()
         let (utxosToSpend, fee) = try StandardUtxoSelector().select(from: utxos, targetValue: amount)
         let totalAmount: UInt64 = utxosToSpend.reduce(UInt64()) { $0 + $1.output.value }
         let change: UInt64 = totalAmount - amount - fee
         
         // ここがカスタム！
-        let unsignedTx = try SendUtility.customTransactionBuild(to: (toAddress, amount), change: (wallet.address, change), utxos: utxosToSpend)
+        let unsignedTx = try SendUtility.customTransactionBuild(to: (wallet.address, amount), change: (wallet.address, change), keys: (wallet.publicKey.data, seatPublicKeyData), utxos: utxosToSpend)
         let signedTx = try SendUtility.customTransactionSign(unsignedTx, with: [wallet.privateKey])
         
         let rawtx = signedTx.serialized().hex
