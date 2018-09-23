@@ -6,6 +6,11 @@
 //  Copyright © 2018年 Yenom. All rights reserved.
 //
 
+import BitcoinKit
+
 struct Config {
     static let isMainNet: Bool = false
+    static var network: Network {
+        return isMainNet ? .mainnet : .testnet
+    }
 }
