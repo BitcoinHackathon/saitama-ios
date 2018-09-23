@@ -11,11 +11,17 @@ import BitcoinKit
 
 class SendUtility {
     
-    static func customTransactionBuild(to: (address: Address, amount: UInt64), change: (address: Address, amount: UInt64), keys: (pubKeyA: Data, pubKeyB: Data), utxos: [UnspentTransaction]) throws -> UnsignedTransaction {
+    enum TransactionType {
+        case open
+        case payment
+    }
+    
+    static func customTransactionBuild(to: (address: Address, amount: UInt64), change: (address: Address, amount: UInt64), keys: (pubKeyA: Data, pubKeyB: Data), utxos: [UnspentTransaction]) throws -> (unsignedTxn: UnsignedTransaction, redeemScript: Script) {
         
         let now = Date().timeIntervalSince1970
         let locktime: Double = 60 * 1
         let expiry = UInt32(now + locktime)
+        print("expiry: \(expiry)")
         
         // ｀LockTime+P2PHK(A)｀ or ｀MultiSig(A,B)｀
         let redeemScript = try! Script()
@@ -42,9 +48,6 @@ class SendUtility {
             .append(.OP_RETURN)
             .appendData(redeemScript.data)
         
-        let p2shAddress = redeemScript.standardAddress(network: Config.isMainNet ? .mainnet : .testnet)
-        print(p2shAddress)
-        
         let opCLTVOutput = TransactionOutput(value: to.amount, lockingScript: redeemScript.toP2SH().data)
         let changeOutput = TransactionOutput(value: change.amount, lockingScript: lockScriptChange.data)
         let opReturnOutput = TransactionOutput(value: 0, lockingScript: opReturnScript.data)
@@ -53,10 +56,10 @@ class SendUtility {
         
         let unsignedInputs = utxos.map { TransactionInput(previousOutput: $0.outpoint, signatureScript: Data(), sequence: UInt32.max) }
         let tx = Transaction(version: 1, inputs: unsignedInputs, outputs: outputs, lockTime: 0)
-        return UnsignedTransaction(tx: tx, utxos: utxos)
+        return (UnsignedTransaction(tx: tx, utxos: utxos), redeemScript)
     }
     
-    static func customTransactionSign(_ unsignedTransaction: UnsignedTransaction, with keys: [PrivateKey]) throws -> Transaction {
+    static func customTransactionSign(_ unsignedTransaction: UnsignedTransaction, transactionType: TransactionType, keys: [PrivateKey], pubKeyBData: Data, redeemScript: Script) throws -> Transaction {
         // Define Transaction
         var signingInputs: [TransactionInput]
         var signingTransaction: Transaction {
@@ -84,9 +87,17 @@ class SendUtility {
             
             // Create Signature Script
             let sigWithHashType: Data = signature + UInt8(hashType)
-            let unlockingScript: Script = try Script()
-                .appendData(sigWithHashType)
-                .appendData(pubkey.data)
+            let unlockingScript: Script
+            switch transactionType {
+            case .open:
+                unlockingScript = try Script()
+                    .appendData(sigWithHashType)
+                    .appendData(pubkey.data)
+            case .payment:
+                unlockingScript = try Script()
+                    .appendData(sigWithHashType)
+                    .appendData(pubkey.data)
+            }
             
             // Update TransactionInput
             signingInputs[i] = TransactionInput(previousOutput: txin.previousOutput, signatureScript: unlockingScript.data, sequence: txin.sequence)
@@ -105,5 +116,24 @@ class SendUtility {
     // 11. MultisigのP2SH形式のアドレスを作る
     static func createMultisigAddress() -> Address {
         return MockKey.keyA.pubkey.toCashaddr() // この一行は消して下さい
+    }
+    
+    static func leaveTransactionBuild(to: (publicKeyData: Data, amount: UInt64), utxos: [UnspentTransaction]) -> UnsignedTransaction {
+        
+        let lockScript = try! Script()
+            .append(.OP_DUP)
+            .append(.OP_HASH160)
+            .appendData(Crypto.sha256ripemd160(to.publicKeyData))
+            .append(.OP_EQUALVERIFY)
+            .append(.OP_CHECKSIG)
+        
+        let seatOutput = TransactionOutput(value: to.amount, lockingScript: lockScript.data)
+        let outputs = [seatOutput]
+        
+        //let output = TransactionOutput(value: to.amount, lockingScript: redeemScript.data)
+        
+        let unsignedInputs = utxos.map { TransactionInput(previousOutput: $0.outpoint, signatureScript: Data(), sequence: UInt32.max) }
+        let tx = Transaction(version: 1, inputs: unsignedInputs, outputs: outputs, lockTime: 0)
+        return UnsignedTransaction(tx: tx, utxos: utxos)
     }
 }
